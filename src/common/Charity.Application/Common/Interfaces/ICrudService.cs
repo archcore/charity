@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Charity.Application.Models;
 
-namespace Charity.Application.Interfaces;
+namespace Charity.Application.Common.Interfaces;
 
 public interface ICrudService<TEntity, TDto>
 {
