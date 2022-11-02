@@ -1,4 +1,5 @@
-﻿using Charity.Domain.Common;
+﻿using System.Reflection;
+using Charity.Domain.Common;
 using Charity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,5 +34,11 @@ public class ApplicationDbContext : DbContext
         }
 
         return await base.SaveChangesAsync(cancellationToken);
+    }
+    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(builder);
     }
 }

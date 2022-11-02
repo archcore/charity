@@ -11,11 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Persistence\Configurations" />
-      <Folder Include="Services" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
     </ItemGroup>
 
