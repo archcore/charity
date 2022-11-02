@@ -13,9 +13,6 @@ public class OrganizationDtoValidator : AbstractValidator<OrganizationDto>
         RuleFor(m => m.Cause)
             .NotEmpty();
         
-        RuleFor(m => m.Cause)
-            .NotEmpty();
-        
         RuleFor(m => m.Country)
             .NotEmpty()
             .Length(2);
