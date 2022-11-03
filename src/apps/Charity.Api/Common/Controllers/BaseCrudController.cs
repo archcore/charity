@@ -31,6 +31,9 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
     [HttpGet]
     public async Task<IActionResult> GetPaginatedListAsync([FromQuery] TPaginatedListRequest request)
     {
+        if (request.PageSize > 50)
+            request.PageSize = 50;
+        
         var filters = GetPaginatedListFilters(request);
         
         var payload = await Service.GetPaginatedListAsync(
