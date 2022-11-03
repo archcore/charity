@@ -10,8 +10,8 @@ namespace Charity.Infrastructure.Services;
 
 public class OrganizationService : BaseCrudService<Organization, OrganizationDto>, IOrganizationService
 {
-    public OrganizationService(ApplicationDbContext dbContext, ISortAdapter sortAdapter, IMapper mapper)
-        : base(dbContext, sortAdapter, mapper)
+    public OrganizationService(ApplicationDbContext dbContext, IFilterAdapter filterAdapter, ISortAdapter sortAdapter, IMapper mapper)
+        : base(dbContext, filterAdapter, sortAdapter, mapper)
     {
     }
 }

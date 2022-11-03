@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Charity.Application.Common.Dto;
 using Charity.Application.Common.Interfaces;
 using Charity.Application.Models;
 using Charity.Domain.Common;
@@ -10,14 +11,17 @@ namespace Charity.Infrastructure.Common.Services;
 
 public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDto>
     where TEntity : BaseEntity
+    where TDto : BaseDto
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IFilterAdapter _filterAdapter;
     private readonly ISortAdapter _sortAdapter;
     private readonly IMapper _mapper;
 
-    protected BaseCrudService(ApplicationDbContext dbContext, ISortAdapter sortAdapter, IMapper mapper)
+    protected BaseCrudService(ApplicationDbContext dbContext, IFilterAdapter filterAdapter, ISortAdapter sortAdapter, IMapper mapper)
     {
         _dbContext = dbContext;
+        _filterAdapter = filterAdapter;
         _sortAdapter = sortAdapter;
         _mapper = mapper;
     }
@@ -28,12 +32,13 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         return entity == null ? default : _mapper.Map<TDto>(entity);
     }
 
-    public async Task<PaginatedList<TDto>> GetPaginatedListAsync(Expression<Func<TEntity, bool>> filterExpression,
-        ICollection<SortExpression> sortExpressions, int pageIndex, int pageSize)
+    public async Task<PaginatedList<TDto>> GetPaginatedListAsync(IList<Expression<Func<TEntity, bool>>>? filters,
+        ICollection<SortExpression>? sortExpressions, int pageIndex, int pageSize)
     {
         var queryable = _dbContext.Set<TEntity>()
-            .AsNoTracking()
-            .Where(filterExpression);
+            .AsNoTracking();
+        
+        queryable = _filterAdapter.ApplyFilterExpressions(queryable, filters);
 
         var count = await queryable.CountAsync();
 
@@ -44,7 +49,7 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         return new PaginatedList<TDto>( items, count, pageIndex, pageSize);
     }
 
-    public async Task AddOneAsync(TDto model)
+    public async Task<TDto> AddOneAsync(TDto model)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -52,6 +57,9 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
 
         await _dbContext.Set<TEntity>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
+
+        model.Id = entity.Id;
+        return model;
     }
 
     public async Task<bool> UpdateOneAsync(Guid id, TDto model)

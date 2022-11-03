@@ -31,6 +31,7 @@ public static class DependencyInjection
         .AddScoped<IOrganizationService, OrganizationService>();
     
     private static IServiceCollection AddAdapters(this IServiceCollection services) => services
+        .AddScoped<IFilterAdapter, FilterAdapter>()
         .AddScoped<ISortAdapter, SortAdapter>();
 
     private static IServiceCollection AddMapster(this IServiceCollection services) => services
