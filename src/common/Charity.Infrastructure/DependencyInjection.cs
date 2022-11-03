@@ -1,8 +1,10 @@
 ﻿using Charity.Application.Common.Interfaces;
 using Charity.Application.Interfaces;
+using Charity.Application.Validators;
 using Charity.Infrastructure.Common.Adapters;
 using Charity.Infrastructure.Persistence;
 using Charity.Infrastructure.Services;
+using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ public static class DependencyInjection
         .AddServiceImplementations()
         .AddAdapters()
         .AddMapster()
+        .AddValidatorsFromAssemblyContaining(typeof(DonationDtoValidator))
         .AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("ApplicationDbContext"),

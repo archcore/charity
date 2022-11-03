@@ -4,6 +4,7 @@ using Charity.Api.Requests;
 using Charity.Application.Dto;
 using Charity.Application.Interfaces;
 using Charity.Domain.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,8 @@ namespace Charity.Api.Controllers;
 [Route("v1/[controller]")]
 public class OrganizationsController : BaseCrudController<Organization, OrganizationDto, IOrganizationService, OrganizationPaginatedListRequest>
 {
-    public OrganizationsController(IOrganizationService service) : base(service)
+    public OrganizationsController(IOrganizationService service, IValidator<OrganizationDto> validator)
+        : base(service, validator)
     {
     }
 
@@ -27,9 +29,9 @@ public class OrganizationsController : BaseCrudController<Organization, Organiza
         
         if (!string.IsNullOrEmpty(request.Cause))
             yield return d => EF.Functions.Like(d.Cause, request.Cause);
-        
+
         if (!string.IsNullOrEmpty(request.Country))
-            yield return d => d.Country.Equals(request.Country, StringComparison.OrdinalIgnoreCase);
+            yield return d => d.Country.ToLower().Equals(request.Country.ToLower());
         
         if (request.FoundationDateMin.HasValue)
             yield return d => d.FoundationDate >= request.FoundationDateMin.Value;

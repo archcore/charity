@@ -4,6 +4,7 @@ using Charity.Api.Requests;
 using Charity.Application.Dto;
 using Charity.Application.Interfaces;
 using Charity.Domain.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,8 @@ namespace Charity.Api.Controllers;
 [Route("v1/[controller]")]
 public class DonationsController : BaseCrudController<Donation, DonationDto, IDonationService, DonationPaginatedListRequest>
 {
-    public DonationsController(IDonationService service) : base(service)
+    public DonationsController(IDonationService service, IValidator<DonationDto> validator)
+        : base(service, validator)
     {
     }
 

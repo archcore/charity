@@ -4,6 +4,8 @@ using Charity.Application.Common.Dto;
 using Charity.Application.Common.Interfaces;
 using Charity.Application.Models;
 using Charity.Domain.Common;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Charity.Api.Common.Controllers;
@@ -14,10 +16,14 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
     where TService : ICrudService<TEntity, TDto>
     where TPaginatedListRequest : PaginatedListRequest
 {
-    protected BaseCrudController(TService service) =>
+    protected BaseCrudController(TService service, IValidator<TDto> validator)
+    {
         Service = service;
+        Validator = validator;
+    }
 
     protected TService Service { get; }
+    protected IValidator<TDto> Validator { get; }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
@@ -48,14 +54,21 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
     [HttpPost]
     public async Task<IActionResult> PostAsync([FromBody] TDto model)
     {
+        var validationResult = await Validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return ValidationBadRequest(validationResult);
+        
         model = await Service.AddOneAsync(model);
-        // ReSharper disable once Mvc.ActionNotResolved
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = model.Id }, model);
+        return CreatedAtAction("GetById", new { id = model.Id }, model);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> PutAsync([FromRoute] Guid id, [FromBody] TDto model)
     {
+        var validationResult = await Validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return ValidationBadRequest(validationResult);
+        
         var isUpdated = await Service.UpdateOneAsync(id, model);
         return isUpdated
             ? Ok(model)
@@ -79,4 +92,18 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
             entry.Key,
             entry.Value.Equals("desc", StringComparison.OrdinalIgnoreCase))
         ).ToList();
+    
+    protected virtual IActionResult ValidationBadRequest(ValidationResult validationResult)
+    {
+        var errors = validationResult.Errors
+            .GroupBy(e => e.PropertyName)
+            .ToDictionary(
+                k => k.Key,
+                v => v.Select(e => e.ErrorMessage).ToList());
+        
+        return BadRequest(new {
+            Type = "validation",
+            Errors = errors
+        });
+    }
 }
