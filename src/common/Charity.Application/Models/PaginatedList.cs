@@ -18,12 +18,4 @@ public class PaginatedList<T>
     public bool HasPreviousPage => PageIndex > 1;
 
     public bool HasNextPage => PageIndex < TotalPages;
-
-    // TODO: Implement once we add EF
-    //public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize, CancellationToken cancellationToken)
-    //{
-    //    var count = await source.CountAsync(cancellationToken);
-    //    var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
-    //    return new PaginatedList<T>(items, count, pageIndex, pageSize);
-    //}
 }

@@ -39,14 +39,13 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
             .AsNoTracking();
         
         queryable = _filterAdapter.ApplyFilterExpressions(queryable, filters);
-
         var count = await queryable.CountAsync();
-
         queryable = _sortAdapter.ApplySortExpressions(queryable, sortExpressions);
+        queryable = queryable.Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
         var items = queryable.Select(entity => _mapper.Map<TDto>(entity)).ToList();
 
-        return new PaginatedList<TDto>( items, count, pageIndex, pageSize);
+        return new PaginatedList<TDto>(items, count, pageIndex, pageSize);
     }
 
     public async Task<TDto> AddOneAsync(TDto model)
