@@ -1,40 +1,83 @@
 ﻿using System.Linq.Expressions;
 using Charity.Application.Common.Interfaces;
 using Charity.Application.Models;
+using Charity.Domain.Common;
+using Charity.Infrastructure.Persistence;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Charity.Infrastructure.Common.Services;
 
 public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDto>
-    where TEntity : class
+    where TEntity : BaseEntity
 {
-    private readonly DbSet<TEntity> _dbSet;
-    
-    protected BaseCrudService(DbSet<TEntity> dbSet) =>
-        _dbSet = dbSet;
-    
-    public async Task<TDto> GetOneAsync(Guid id)
+    private readonly ApplicationDbContext _dbContext;
+    private readonly ISortAdapter _sortAdapter;
+    private readonly IMapper _mapper;
+
+    protected BaseCrudService(ApplicationDbContext dbContext, ISortAdapter sortAdapter, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
+        _sortAdapter = sortAdapter;
+        _mapper = mapper;
     }
 
-    public async Task<PaginatedList<TDto>> GetPaginatedListAsync(Expression<Func<TEntity, bool>> filteringExpression, int pageIndex, int pageSize)
+    public async Task<TDto?> GetOneAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = await _dbContext.Set<TEntity>().FindAsync(id);
+        return entity == null ? default : _mapper.Map<TDto>(entity);
+    }
+
+    public async Task<PaginatedList<TDto>> GetPaginatedListAsync(Expression<Func<TEntity, bool>> filterExpression,
+        ICollection<SortExpression> sortExpressions, int pageIndex, int pageSize)
+    {
+        var queryable = _dbContext.Set<TEntity>()
+            .AsNoTracking()
+            .Where(filterExpression);
+
+        var count = await queryable.CountAsync();
+
+        queryable = _sortAdapter.ApplySortExpressions(queryable, sortExpressions);
+
+        var items = queryable.Select(entity => _mapper.Map<TDto>(entity)).ToList();
+
+        return new PaginatedList<TDto>( items, count, pageIndex, pageSize);
     }
 
     public async Task AddOneAsync(TDto model)
     {
-        throw new NotImplementedException();
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
+        var entity = _mapper.Map<TEntity>(model);
+
+        await _dbContext.Set<TEntity>().AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateOneAsync(Guid id, TDto model)
+    public async Task<bool> UpdateOneAsync(Guid id, TDto model)
     {
-        throw new NotImplementedException();
+        if (model == null) throw new ArgumentNullException(nameof(model));
+        
+        var entity = await _dbContext.Set<TEntity>().FindAsync(id);
+        if (entity == null)
+            return false;
+
+        entity = _mapper.Map<TEntity>(model);
+        entity.Id = id;
+
+        _dbContext.Set<TEntity>().Update(entity);
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public async Task DeleteOneAsync(Guid id)
+    public async Task<bool> DeleteOneAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = await _dbContext.Set<TEntity>().FindAsync(id);
+        if (entity == null)
+            return false;
+        
+        _dbContext.Remove(entity);
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 }

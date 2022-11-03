@@ -1,6 +1,10 @@
-﻿using Charity.Application.Interfaces;
+﻿using Charity.Application.Common.Interfaces;
+using Charity.Application.Interfaces;
+using Charity.Infrastructure.Common.Adapters;
 using Charity.Infrastructure.Persistence;
 using Charity.Infrastructure.Services;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +17,8 @@ public static class DependencyInjection
     
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) => services
         .AddServiceImplementations()
+        .AddAdapters()
+        .AddMapster()
         .AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("ApplicationDbContext"),
@@ -23,4 +29,11 @@ public static class DependencyInjection
         .AddScoped<IDonationService, DonationService>()
         .AddScoped<IDonatorService, DonatorService>()
         .AddScoped<IOrganizationService, OrganizationService>();
+    
+    private static IServiceCollection AddAdapters(this IServiceCollection services) => services
+        .AddScoped<ISortAdapter, SortAdapter>();
+
+    private static IServiceCollection AddMapster(this IServiceCollection services) => services
+        .AddSingleton(TypeAdapterConfig.GlobalSettings)
+        .AddScoped<IMapper, ServiceMapper>();
 }
