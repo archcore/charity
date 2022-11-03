@@ -2,12 +2,13 @@
 using Charity.Domain.Common;
 using Charity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace Charity.Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    private readonly DateTimeOffset _now = DateTimeOffset.Now;
+    private readonly Instant _now = SystemClock.Instance.GetCurrentInstant();
     
     public ApplicationDbContext(DbContextOptions options)
         : base(options)
@@ -19,7 +20,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Donation>? Donations { get; set; }
     
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-    {        
+    {
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             switch (entry.State)

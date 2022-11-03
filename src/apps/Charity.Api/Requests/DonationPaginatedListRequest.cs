@@ -1,4 +1,6 @@
-﻿namespace Charity.Api.Requests;
+﻿using NodaTime;
+
+namespace Charity.Api.Requests;
 
 public class DonationPaginatedListRequest : PaginatedListRequest
 {
@@ -7,6 +9,6 @@ public class DonationPaginatedListRequest : PaginatedListRequest
     public decimal? ValueMin { get; set; }
     public decimal? ValueMax { get; set; }
     public string? Description { get; set; }
-    public DateTimeOffset? DonatedAtMin { get; set; }
-    public DateTimeOffset? DonatedAtMax { get; set; }
+    public LocalDateTime? DonatedAtMin { get; set; }
+    public LocalDateTime? DonatedAtMax { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using Charity.Domain.Common;
+using NodaTime;
 
 namespace Charity.Domain.Entities;
 
@@ -13,7 +14,7 @@ public class Organization : BaseEntity
     public string? State { get; set; }
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
-    public DateTimeOffset FoundationDate { get; set; }
+    public LocalDate FoundationDate { get; set; }
     public bool IsAcceptingDonations { get; set; }
     
     public virtual List<Donation>? Donations { get; set; }

@@ -22,7 +22,9 @@ public static class DependencyInjection
         .AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("ApplicationDbContext"),
-                b => b.MigrationsAssembly(MigrationsAssembly))
+                b => b
+                    .MigrationsAssembly(MigrationsAssembly)
+                    .UseNodaTime())
         );
 
     private static IServiceCollection AddServiceImplementations(this IServiceCollection services) => services

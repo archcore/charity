@@ -1,5 +1,6 @@
 ﻿using Charity.Application.Dto;
 using FluentValidation;
+using NodaTime;
 
 namespace Charity.Application.Validators;
 
@@ -14,6 +15,6 @@ public class DonationDtoValidator : AbstractValidator<DonationDto>
             .GreaterThan(0);
 
         RuleFor(m => m.DonatedAt)
-            .LessThan(DateTimeOffset.Now);
+            .LessThan(LocalDateTime.FromDateTime(DateTime.Now));
     }
 }

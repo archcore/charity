@@ -1,4 +1,5 @@
 ﻿using Charity.Application.Common.Dto;
+using NodaTime;
 
 namespace Charity.Application.Dto;
 
@@ -13,7 +14,7 @@ public class OrganizationDto : BaseDto
     public string? State { get; set; }
     public string? ZipCode { get; set; }
     public string? Country { get; set; }
-    public DateTimeOffset FoundationDate { get; set; }
+    public LocalDate FoundationDate { get; set; }
     public bool IsAcceptingDonations { get; set; }
     
     public virtual List<DonationDto>? Donations { get; set; }
