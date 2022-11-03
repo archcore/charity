@@ -1,10 +1,10 @@
-﻿using Charity.Domain.Enums;
+﻿using Charity.Application.Common.Dto;
+using Charity.Domain.Enums;
 
 namespace Charity.Application.Dto;
 
-public class DonatorDto
+public class DonatorDto : BaseDto
 {
-    public Guid Id { get; set; }
     public string? Name { get; set; }
     public string? Document { get; set; }
     public DateTimeOffset DateOfBirth { get; set; }

@@ -1,8 +1,9 @@
-﻿namespace Charity.Application.Dto;
+﻿using Charity.Application.Common.Dto;
 
-public class DonationDto
+namespace Charity.Application.Dto;
+
+public class DonationDto : BaseDto
 {
-    public Guid Id { get; set; }
     public Guid OrganizationId { get; set; }
     public Guid DonatorId { get; set; }
     public decimal Value { get; set; }
