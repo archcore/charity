@@ -11,9 +11,9 @@ namespace Charity.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OrganizationController : BaseCrudController<Organization, OrganizationDto, IOrganizationService, OrganizationPaginatedListRequest>
+public class OrganizationsController : BaseCrudController<Organization, OrganizationDto, IOrganizationService, OrganizationPaginatedListRequest>
 {
-    public OrganizationController(IOrganizationService service) : base(service)
+    public OrganizationsController(IOrganizationService service) : base(service)
     {
     }
 

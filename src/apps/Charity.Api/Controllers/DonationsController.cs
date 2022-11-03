@@ -11,13 +11,13 @@ namespace Charity.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DonationsController : BaseCrudController<Donation, DonationDto, IDonationService, DonationsPaginatedListRequest>
+public class DonationsController : BaseCrudController<Donation, DonationDto, IDonationService, DonationPaginatedListRequest>
 {
     public DonationsController(IDonationService service) : base(service)
     {
     }
 
-    protected override IEnumerable<Expression<Func<Donation, bool>>>? GetPaginatedListFilters(DonationsPaginatedListRequest request)
+    protected override IEnumerable<Expression<Func<Donation, bool>>>? GetPaginatedListFilters(DonationPaginatedListRequest request)
     {
         if (request.OrganizationId.HasValue)
             yield return d => d.OrganizationId == request.OrganizationId.Value;

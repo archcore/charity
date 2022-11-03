@@ -1,6 +1,6 @@
 ﻿namespace Charity.Api.Requests;
 
-public class DonationsPaginatedListRequest : PaginatedListRequest
+public class DonationPaginatedListRequest : PaginatedListRequest
 {
     public Guid? OrganizationId { get; set; }
     public Guid? DonatorId { get; set; }
