@@ -4,10 +4,13 @@ using Charity.Api.Requests;
 using Charity.Application.Dto;
 using Charity.Application.Interfaces;
 using Charity.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Charity.Api.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class OrganizationController : BaseCrudController<Organization, OrganizationDto, IOrganizationService, OrganizationPaginatedListRequest>
 {
     public OrganizationController(IOrganizationService service) : base(service)
