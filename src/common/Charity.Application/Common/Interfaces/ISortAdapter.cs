@@ -4,5 +4,5 @@ namespace Charity.Application.Common.Interfaces;
 
 public interface ISortAdapter
 {
-    IQueryable<TEntity> ApplySortExpressions<TEntity>(IQueryable<TEntity> queryable, ICollection<SortExpression> sortExpressions);
+    IQueryable<TEntity> ApplySortExpressions<TEntity>(IQueryable<TEntity> queryable, ICollection<SortExpression>? sortExpressions);
 }

@@ -12,9 +12,9 @@ namespace Charity.Infrastructure.Common.Adapters;
 public class SortAdapter : ISortAdapter
 {
     public IQueryable<TEntity> ApplySortExpressions<TEntity>(IQueryable<TEntity> queryable,
-        ICollection<SortExpression> sortExpressions)
+        ICollection<SortExpression>? sortExpressions)
     {
-        return sortExpressions.Any() is false
+        return sortExpressions == null || sortExpressions.Any() is false
             ? OrderByAsc(queryable, "Id")
             : ApplySortExpressionsInternal(queryable, sortExpressions);
     }
