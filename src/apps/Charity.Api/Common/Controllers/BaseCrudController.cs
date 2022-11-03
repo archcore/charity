@@ -28,6 +28,7 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
             : Ok(model);
     }
 
+    [HttpGet]
     public async Task<IActionResult> GetPaginatedListAsync([FromQuery] TPaginatedListRequest request)
     {
         var filters = GetPaginatedListFilters(request);
