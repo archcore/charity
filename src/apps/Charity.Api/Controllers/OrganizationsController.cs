@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Charity.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("v1/[controller]")]
 public class OrganizationsController : BaseCrudController<Organization, OrganizationDto, IOrganizationService, OrganizationPaginatedListRequest>
 {
     public OrganizationsController(IOrganizationService service) : base(service)
