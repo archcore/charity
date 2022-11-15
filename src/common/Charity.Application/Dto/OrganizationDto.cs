@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace Charity.Application.Dto;
 
-public class OrganizationDto : BaseDto
+public record OrganizationDto : BaseDto
 {
     public string? LegalName { get; set; }
     public string? FriendlyName { get; set; }

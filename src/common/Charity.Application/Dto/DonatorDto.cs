@@ -4,7 +4,7 @@ using NodaTime;
 
 namespace Charity.Application.Dto;
 
-public class DonatorDto : BaseDto
+public record DonatorDto : BaseDto
 {
     public string? Name { get; set; }
     public string? Document { get; set; }
