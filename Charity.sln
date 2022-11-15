@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{72917A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charity.Api", "src\apps\Charity.Api\Charity.Api.csproj", "{6C9D0678-F1B0-40E3-829A-2F1C55CA96E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charity.Tests", "tests\Charity.Tests\Charity.Tests.csproj", "{9342E90A-F7B3-4036-8F8D-1E3122ED1869}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,7 @@ Global
 		{FD0D5875-4D7F-44A0-BD59-0AB6ECBD1922} = {72917A45-2440-4A2D-84CF-A9B84F907490}
 		{DF972C03-9EDA-45F7-A469-A2100BF5DC6F} = {72917A45-2440-4A2D-84CF-A9B84F907490}
 		{6C9D0678-F1B0-40E3-829A-2F1C55CA96E7} = {2D644680-0AFB-4FF4-8A35-08B2E56C5EE6}
+		{9342E90A-F7B3-4036-8F8D-1E3122ED1869} = {350824C3-207A-447F-AB9F-5BE23C416A83}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AA99B3FF-9719-4E88-BBD8-A763F2214864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -53,5 +56,9 @@ Global
 		{6C9D0678-F1B0-40E3-829A-2F1C55CA96E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C9D0678-F1B0-40E3-829A-2F1C55CA96E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C9D0678-F1B0-40E3-829A-2F1C55CA96E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9342E90A-F7B3-4036-8F8D-1E3122ED1869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9342E90A-F7B3-4036-8F8D-1E3122ED1869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9342E90A-F7B3-4036-8F8D-1E3122ED1869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9342E90A-F7B3-4036-8F8D-1E3122ED1869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
