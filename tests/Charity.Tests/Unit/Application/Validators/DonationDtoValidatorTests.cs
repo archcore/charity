@@ -8,6 +8,13 @@ namespace Charity.Tests.Unit.Application.Validators;
 
 public class DonationDtoValidatorTests
 {
+    private static readonly DonationDto ValidDonation = new()
+    {
+        Description = "My first donation",
+        DonatedAt = LocalDateTime.FromDateTime(DateTime.Today),
+        Value = 5555.55m
+    };
+    
     private readonly DonationDtoValidator _validator;
 
     public DonationDtoValidatorTests()
@@ -18,16 +25,8 @@ public class DonationDtoValidatorTests
     [Fact]
     public void Validate_WhenDataIsValid_ReturnsTrue()
     {
-        // Arrange
-        var dto = new DonationDto
-        {
-            Description = "My first donation",
-            DonatedAt = LocalDateTime.FromDateTime(DateTime.Today),
-            Value = 5555.55m
-        };
-
         // Act
-        var result = _validator.Validate(dto);
+        var result = _validator.Validate(ValidDonation);
 
         // Assert
         result.IsValid.Should().BeTrue();
@@ -38,7 +37,7 @@ public class DonationDtoValidatorTests
     public void Validate_WhenDataIsInvalid_ReturnsFalse()
     {
         // Arrange
-        var dto = new DonationDto
+        var dto = ValidDonation with
         {
             Description = "",
             DonatedAt = LocalDateTime.FromDateTime(DateTime.Now.AddDays(1)),
@@ -48,7 +47,7 @@ public class DonationDtoValidatorTests
         // Act
         var result = _validator.Validate(dto);
         
-        // Assert NotEmptyValidator GreaterThanValidator LessThanValidator
+        // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().BeEquivalentTo(new[]
             {
