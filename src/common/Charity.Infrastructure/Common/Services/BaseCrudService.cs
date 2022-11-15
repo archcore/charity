@@ -48,15 +48,15 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         return new PaginatedList<TDto>(items, count, pageIndex, pageSize);
     }
 
-    public async Task<TDto> AddOneAsync(TDto model)
+    public Task<TDto> AddOneAsync(TDto model)
     {
         if (model == null)
             throw new ArgumentNullException(nameof(model));
 
-        return await AddOneAsyncInternal(model);
+        return AddOneInternalAsync(model);
     }
 
-    private async Task<TDto> AddOneAsyncInternal(TDto model)
+    private async Task<TDto> AddOneInternalAsync(TDto model)
     {
         var entity = _mapper.Map<TEntity>(model);
 
@@ -67,15 +67,15 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         return model;
     }
 
-    public async Task<bool> UpdateOneAsync(Guid id, TDto model)
+    public Task<bool> UpdateOneAsync(Guid id, TDto model)
     {
         if (model == null)
             throw new ArgumentNullException(nameof(model));
 
-        return await UpdateOneAsyncInternal(id, model);
+        return UpdateOneInternalAsync(id, model);
     }
 
-    private async Task<bool> UpdateOneAsyncInternal(Guid id, TDto model)
+    private async Task<bool> UpdateOneInternalAsync(Guid id, TDto model)
     {
         var entity = await _dbContext.Set<TEntity>().FindAsync(id);
         if (entity == null)
