@@ -22,10 +22,10 @@ public class DonatorsController : BaseCrudController<Donator, DonatorDto, IDonat
     protected override IEnumerable<Expression<Func<Donator, bool>>>? GetPaginatedListFilters(DonatorPaginatedListRequest request)
     {
         if (!string.IsNullOrEmpty(request.Name))
-            yield return d => EF.Functions.Like(d.Name, request.Name);
+            yield return d => EF.Functions.Like(d.Name!, request.Name);
         
         if (!string.IsNullOrEmpty(request.Document))
-            yield return d => EF.Functions.Like(d.Document, request.Document);
+            yield return d => EF.Functions.Like(d.Document!, request.Document);
         
         if (request.DateOfBirthMin.HasValue)
             yield return d => d.DateOfBirth >= request.DateOfBirthMin.Value;
@@ -34,7 +34,7 @@ public class DonatorsController : BaseCrudController<Donator, DonatorDto, IDonat
             yield return d => d.DateOfBirth <= request.DateOfBirthMax.Value;
         
         if (!string.IsNullOrEmpty(request.Occupation))
-            yield return d => EF.Functions.Like(d.Occupation, request.Occupation);
+            yield return d => EF.Functions.Like(d.Occupation ?? string.Empty, request.Occupation);
         
         if (request.Type.HasValue)
             yield return d => d.Type == request.Type.Value;

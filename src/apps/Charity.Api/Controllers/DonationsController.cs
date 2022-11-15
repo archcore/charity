@@ -31,7 +31,7 @@ public class DonationsController : BaseCrudController<Donation, DonationDto, IDo
             yield return d => d.Value >= request.ValueMin.Value;
         
         if (request.ValueMax.HasValue)
-            yield return d => d.Value <= request.ValueMin.Value;
+            yield return d => d.Value <= request.ValueMax.Value;
         
         if (request.DonatedAtMin.HasValue)
             yield return d => d.DonatedAt >= request.DonatedAtMin.Value;
@@ -40,6 +40,6 @@ public class DonationsController : BaseCrudController<Donation, DonationDto, IDo
             yield return d => d.DonatedAt <= request.DonatedAtMax.Value;
         
         if (!string.IsNullOrEmpty(request.Description))
-            yield return d => EF.Functions.Like(d.Description, request.Description);
+            yield return d => EF.Functions.Like(d.Description!, request.Description);
     }
 }

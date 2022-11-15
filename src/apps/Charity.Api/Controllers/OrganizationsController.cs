@@ -22,16 +22,16 @@ public class OrganizationsController : BaseCrudController<Organization, Organiza
     protected override IEnumerable<Expression<Func<Organization, bool>>>? GetPaginatedListFilters(OrganizationPaginatedListRequest request)
     {
         if (!string.IsNullOrEmpty(request.LegalName))
-            yield return d => EF.Functions.Like(d.LegalName, request.LegalName);
+            yield return d => EF.Functions.Like(d.LegalName!, request.LegalName);
         
         if (!string.IsNullOrEmpty(request.FriendlyName))
-            yield return d => EF.Functions.Like(d.FriendlyName, request.FriendlyName);
+            yield return d => EF.Functions.Like(d.FriendlyName ?? string.Empty, request.FriendlyName);
         
         if (!string.IsNullOrEmpty(request.Cause))
-            yield return d => EF.Functions.Like(d.Cause, request.Cause);
+            yield return d => EF.Functions.Like(d.Cause!, request.Cause);
 
         if (!string.IsNullOrEmpty(request.Country))
-            yield return d => d.Country.ToLower().Equals(request.Country.ToLower());
+            yield return d => d.Country!.ToLower().Equals(request.Country.ToLower());
         
         if (request.FoundationDateMin.HasValue)
             yield return d => d.FoundationDate >= request.FoundationDateMin.Value;
