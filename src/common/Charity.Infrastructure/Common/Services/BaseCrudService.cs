@@ -50,8 +50,14 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
 
     public async Task<TDto> AddOneAsync(TDto model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        if (model == null)
+            throw new ArgumentNullException(nameof(model));
 
+        return await AddOneAsyncInternal(model);
+    }
+
+    private async Task<TDto> AddOneAsyncInternal(TDto model)
+    {
         var entity = _mapper.Map<TEntity>(model);
 
         await _dbContext.Set<TEntity>().AddAsync(entity);
@@ -63,8 +69,14 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
 
     public async Task<bool> UpdateOneAsync(Guid id, TDto model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        
+        if (model == null)
+            throw new ArgumentNullException(nameof(model));
+
+        return await UpdateOneAsyncInternal(id, model);
+    }
+
+    private async Task<bool> UpdateOneAsyncInternal(Guid id, TDto model)
+    {
         var entity = await _dbContext.Set<TEntity>().FindAsync(id);
         if (entity == null)
             return false;
