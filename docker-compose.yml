@@ -8,8 +8,15 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=archcore
-  
-  adminer:
-    image: adminer
+
+  api:
+    build:
+      context: .
+      dockerfile: src/apps/Charity.Api/Dockerfile
     ports:
-      - "8080:8080"
+      - "5005:80"
+    environment:
+      - "ConnectionStrings__ApplicationDbContext=User ID=postgres;Password=archcore;Server=postgres;Port=5432;Database=charity;Integrated Security=true;Pooling=true;"
+    restart: on-failure
+    depends_on:
+      - postgres
