@@ -89,6 +89,32 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         return true;
     }
 
+    public Task<List<Guid>> UpdateManyAsync(List<Guid> ids, TDto model)
+    {
+        if (model == null)
+            throw new ArgumentNullException(nameof(model));
+
+        return UpdateManyInternalAsync(ids, model);
+    }
+
+    private async Task<List<Guid>> UpdateManyInternalAsync(List<Guid> ids, TDto model)
+    {
+        ids = await _dbContext.Set<TEntity>()
+            .Where(m => ids.Contains(m.Id))
+            .Select(m => m.Id)
+            .ToListAsync();
+
+        var entities = ids.Select(id => {
+            var entity = _mapper.Map<TEntity>(model);
+            entity.Id = id;
+            return entity;
+        }).ToList();
+
+        _dbContext.Set<TEntity>().UpdateRange(entities);
+        await _dbContext.SaveChangesAsync();
+        return ids;
+    }
+
     public async Task<bool> DeleteOneAsync(Guid id)
     {
         var entity = await _dbContext.Set<TEntity>().FindAsync(id);
@@ -98,5 +124,16 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         _dbContext.Remove(entity);
         await _dbContext.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<Guid>> DeleteManyAsync(List<Guid> ids)
+    {
+        var entities = await _dbContext.Set<TEntity>()
+            .Where(m => ids.Contains(m.Id))
+            .ToListAsync();
+        
+        _dbContext.RemoveRange(entities);
+        await _dbContext.SaveChangesAsync();
+        return entities.Select(m => m.Id).ToList();
     }
 }

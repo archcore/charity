@@ -40,10 +40,12 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
         if (request.PageSize > 50)
             request.PageSize = 50;
         
-        var filters = GetPaginatedListFilters(request);
+        var specificFilters = GetPaginatedListFilters(request);
+        var allFilters = specificFilters?.ToList() ?? new List<Expression<Func<TEntity, bool>>>();
+        allFilters.Add(m => request.Ids.Contains(m.Id));
         
         var payload = await Service.GetPaginatedListAsync(
-            filters?.ToList(),
+            allFilters,
             BuildSortExpressions(request),
             request.PageIndex,
             request.PageSize);
@@ -75,6 +77,17 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
             : NotFound();
     }
 
+    [HttpPut]
+    public async Task<IActionResult> PutManyAsync([FromQuery] List<Guid> ids, [FromBody] TDto model)
+    {
+        var validationResult = await Validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            return ValidationBadRequest(validationResult);
+        
+        var updatedIds = await Service.UpdateManyAsync(ids, model);
+        return Ok(updatedIds);
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
     {
@@ -82,6 +95,13 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
         return isUpdated
             ? Ok()
             : NotFound();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteAsync([FromQuery] List<Guid> ids)
+    {
+        var deletedIds = await Service.DeleteManyAsync(ids);
+        return Ok(deletedIds);
     }
 
     protected abstract IEnumerable<Expression<Func<TEntity, bool>>>? GetPaginatedListFilters(

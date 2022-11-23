@@ -16,5 +16,7 @@ public interface ICrudService<TEntity, TDto>
 
     Task<TDto> AddOneAsync(TDto model);
     Task<bool> UpdateOneAsync(Guid id, TDto model);
+    Task<List<Guid>> UpdateManyAsync(List<Guid> ids, TDto model);
     Task<bool> DeleteOneAsync(Guid id);
+    Task<List<Guid>> DeleteManyAsync(List<Guid> ids);
 }
