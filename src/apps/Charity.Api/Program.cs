@@ -32,11 +32,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// TODO: Create another app to migrate database to not have it in the API
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.EnsureCreated();
-}
-
 app.Run();
