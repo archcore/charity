@@ -42,7 +42,8 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
         
         var specificFilters = GetPaginatedListFilters(request);
         var allFilters = specificFilters?.ToList() ?? new List<Expression<Func<TEntity, bool>>>();
-        allFilters.Add(m => request.Ids.Contains(m.Id));
+        if (request.Ids?.Count > 0)
+            allFilters.Add(m => request.Ids.Contains(m.Id));
         
         var payload = await Service.GetPaginatedListAsync(
             allFilters,
