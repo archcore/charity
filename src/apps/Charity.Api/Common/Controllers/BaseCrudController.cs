@@ -108,11 +108,13 @@ public abstract class BaseCrudController<TEntity, TDto, TService, TPaginatedList
     protected abstract IEnumerable<Expression<Func<TEntity, bool>>>? GetPaginatedListFilters(
         TPaginatedListRequest request);
 
-    private static ICollection<SortExpression>? BuildSortExpressions(TPaginatedListRequest request) =>
-        request.Sort?.Select(entry => new SortExpression(
-            entry.Key,
-            entry.Value.Equals("desc", StringComparison.OrdinalIgnoreCase))
-        ).ToList();
+    private static ICollection<SortExpression> BuildSortExpressions(TPaginatedListRequest request) =>
+        string.IsNullOrEmpty(request.Sort)
+        ? Array.Empty<SortExpression>()
+        : new[]
+        {
+            new SortExpression(request.Sort, request.Order.Equals("desc", StringComparison.OrdinalIgnoreCase))
+        };
     
     protected virtual IActionResult ValidationBadRequest(ValidationResult validationResult)
     {
