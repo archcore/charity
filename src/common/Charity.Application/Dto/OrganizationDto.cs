@@ -16,6 +16,4 @@ public record OrganizationDto : BaseDto
     public string? Country { get; set; }
     public LocalDate FoundationDate { get; set; }
     public bool IsAcceptingDonations { get; set; }
-    
-    public virtual List<DonationDto>? Donations { get; set; }
 }

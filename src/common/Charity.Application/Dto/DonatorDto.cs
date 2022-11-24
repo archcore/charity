@@ -11,6 +11,4 @@ public record DonatorDto : BaseDto
     public LocalDate? DateOfBirth { get; set; }
     public string? Occupation { get; set; }
     public DonatorType Type { get; set; }
-    
-    public virtual List<DonationDto>? Donations { get; set; }
 }
