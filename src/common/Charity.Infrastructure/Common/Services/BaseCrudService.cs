@@ -81,6 +81,7 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
         if (entity == null)
             return false;
 
+        _dbContext.Entry(entity).State = EntityState.Detached;
         entity = _mapper.Map<TEntity>(model);
         entity.Id = id;
 
@@ -101,6 +102,7 @@ public abstract class BaseCrudService<TEntity, TDto> : ICrudService<TEntity, TDt
     {
         ids = await _dbContext.Set<TEntity>()
             .Where(m => ids.Contains(m.Id))
+            .AsNoTracking()
             .Select(m => m.Id)
             .ToListAsync();
 
